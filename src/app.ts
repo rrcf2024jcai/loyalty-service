@@ -126,6 +126,7 @@ app.patch(
 );
 
 /**
+ * Ticket #4: LOYALTY-156 - View all customers
  * Retrieve all customers and the total count.
  * @route GET /api/customers
  */
@@ -137,4 +138,54 @@ app.get("/api/customers", (req: Request, res: Response): void => {
   };
   res.json(responseData);
 });
+
+/**
+ * Retrieve all customers and the total count.
+ * @route GET /api/customers
+ */
+app.get("/api/customers", (req: Request, res: Response): void => {
+  const totalCount = customers.length;
+  const responseData = {
+    count: totalCount,
+    customers: customers,
+  };
+  res.json(responseData);
+});
+
+/**
+ * Ticket #6: FEATURE-892 - Get program statistics
+ * Retrieve loyalty program statistics.
+ * @route GET /api/statistics
+ */
+app.get("/api/statistics", (req: Request, res: Response): void => {
+  let totalPoints = 0;
+  const customersByStatus = {
+    GOLD: 0,
+    SILVER: 0,
+    BRONZE: 0,
+  };
+
+  customers.forEach((customer) => {
+    totalPoints = totalPoints + customer.points;
+
+    if (customer.status === "GOLD") {
+      customersByStatus.GOLD++;
+    } else if (customer.status === "SILVER") {
+      customersByStatus.SILVER++;
+    } else if (customer.status === "BRONZE") {
+      customersByStatus.BRONZE++;
+    }
+  });
+
+  const totalCustomers = customers.length;
+
+  const responseData = {
+    totalCustomers: totalCustomers,
+    totalPoints: totalPoints,
+    customersByStatus: customersByStatus,
+  };
+
+  res.json(responseData);
+});
+
 export default app;
