@@ -125,7 +125,21 @@ app.patch(
   }
 );
 
-/**Ticket #4: LOYALTY-156 - View all customers
+/**
+ * Ticket #4: LOYALTY-156 - View all customers
+ * Retrieve all customers and the total count.
+ * @route GET /api/customers
+ */
+app.get("/api/customers", (req: Request, res: Response): void => {
+  const totalCount = customers.length;
+  const responseData = {
+    count: totalCount,
+    customers: customers,
+  };
+  res.json(responseData);
+});
+
+/**
  * Retrieve all customers and the total count.
  * @route GET /api/customers
  */
